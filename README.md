@@ -1,6 +1,25 @@
 # Vue url sync
 
-Vue composable for syncing reactive state with URL query parameters.
+Keep your Vue state automatically synchronized with URL parameters. No extra configuration needed - just use your reactive refs and let them sync with the URL automatically.
+
+```ts
+const { count } = useQueryRef('count', 0)
+
+// When count changes:
+count.value++ // URL updates to ?q=MQ==
+count.value = 5 // URL updates to ?q=NQ==
+
+// When URL changes:
+// User visits ?q=MTA=
+console.log(count.value) // outputs: 10
+```
+
+Your state is always in sync with the URL, making it perfect for:
+
+- Sharing application state via URLs
+- Maintaining state between page refreshes
+- Building sharable filtered views
+- Persisting form state
 
 ## Installation
 

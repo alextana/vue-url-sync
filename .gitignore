@@ -169,7 +169,8 @@ dist
 .pnp.\*
 
 # Custom ignores
-examples/
+/examples/vue/
+/examples/*
 
 # IntelliJ based IDEs
 .idea
