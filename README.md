@@ -10,8 +10,8 @@ count.value++ // URL updates to ?q=MQ==
 count.value = 5 // URL updates to ?q=NQ==
 
 // When URL changes:
-// User visits ?q=MTA=
-console.log(count.value) // outputs: 10
+// User visits ?q=NQ==
+console.log(count.value) // outputs: 5
 ```
 
 Your state is always in sync with the URL, making it perfect for:
