@@ -53,22 +53,27 @@ export const isJsonValue = (value: unknown): value is JsonValue => {
   }
 }
 
-export const serializeParam = (value: StateValue): string => {
-  if (value === null || value === undefined) return ''
-  return encode(value)
+export const serializeParam = (
+  value: unknown,
+  shouldObfuscate: boolean = true
+): string | null => {
+  if (value === undefined || value === null) return null
+  const stringified = JSON.stringify(value)
+  return shouldObfuscate ? btoa(stringified) : stringified
 }
 
-export const parseQueryParam = <T extends StateValue>(
-  value: string | null | undefined,
-  fallback?: T
+export const parseQueryParam = <T>(
+  value: string | null,
+  defaultValue: T | undefined,
+  shouldObfuscate: boolean = true
 ): T => {
-  if (!value) return fallback as T
+  if (!value) return defaultValue as T
 
   try {
-    const decoded = decode(value)
-    return decoded as T
+    const decoded = shouldObfuscate ? atob(value) : value
+    return JSON.parse(decoded) as T
   } catch {
-    return fallback as T
+    return defaultValue as T
   }
 }
 

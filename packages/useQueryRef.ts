@@ -11,27 +11,46 @@ type QueryRefReturn<K extends string, T extends JsonValue> = {
   reset: () => void
 }
 
+// Add configuration type
+interface QueryRefConfig {
+  obfuscate?: boolean
+}
+
+// Default configuration
+const defaultConfig: QueryRefConfig = {
+  obfuscate: true,
+}
+
 // URL state management
-const resetUrlParam = (param: string): void => {
+const resetUrlParam = (
+  param: string,
+  config: QueryRefConfig = defaultConfig
+): void => {
   const queryParams = utils.getQueryParams()
   if (!queryParams) return
 
-  queryParams.delete(utils.encodeParamName(param))
+  const paramName = config.obfuscate ? utils.encodeParamName(param) : param
+  queryParams.delete(paramName)
   utils.updateUrl(queryParams)
 }
 
 const useQueryRefHook = <K extends string, T extends JsonValue>(
   param: K,
-  initialState?: T
+  initialState?: T,
+  config: QueryRefConfig = defaultConfig
 ): QueryRefReturn<K, T> => {
-  // Initialize
-  const encodedParam = utils.encodeParamName(param)
+  // Initialize with optional encoding
+  const paramName = config.obfuscate ? utils.encodeParamName(param) : param
   utils.storeInitialValue(param, initialState)
 
   // State setup
   const queryParams = utils.getQueryParams()
   const state = ref<T>(
-    utils.parseQueryParam(queryParams?.get(encodedParam), initialState)
+    utils.parseQueryParam(
+      queryParams?.get(paramName) ?? null,
+      initialState,
+      config.obfuscate
+    )
   ) as Ref<T>
 
   // Register ref for global state management
@@ -54,10 +73,10 @@ const useQueryRefHook = <K extends string, T extends JsonValue>(
       const queryParams = utils.getQueryParams()
       if (!queryParams) return
 
-      const serializedValue = utils.serializeParam(newValue)
+      const serializedValue = utils.serializeParam(newValue, config.obfuscate)
       serializedValue
-        ? queryParams.set(encodedParam, serializedValue)
-        : queryParams.delete(encodedParam)
+        ? queryParams.set(paramName, serializedValue)
+        : queryParams.delete(paramName)
 
       utils.updateUrl(queryParams)
     },
@@ -66,7 +85,7 @@ const useQueryRefHook = <K extends string, T extends JsonValue>(
   return {
     [param]: trackedValue,
     reset: () => {
-      resetUrlParam(param)
+      resetUrlParam(param, config)
       state.value = initialState as T
     },
   } as QueryRefReturn<K, T>

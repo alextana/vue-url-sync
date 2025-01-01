@@ -1,113 +1,49 @@
-# Vue url sync
+# use-query-ref
 
-Keep your Vue state automatically synchronized with URL parameters. No extra configuration needed - just use your reactive refs and let them sync with the URL automatically.
+A lightweight utility for syncing state with URL query parameters in Vue applications.
 
-```ts
-const { count } = useQueryRef('count', 0)
+## Features
 
-// When count changes:
-count.value++ // URL updates to ?q=MQ==
-count.value = 5 // URL updates to ?q=NQ==
-
-// When URL changes:
-// User visits ?q=NQ==
-console.log(count.value) // outputs: 5
-```
-
-Your state is always in sync with the URL, making it perfect for:
-
-- Sharing application state via URLs
-- Maintaining state between page refreshes
-- Building sharable filtered views
-- Persisting form state
+- 🔄 Bi-directional sync between state and URL query parameters
+- 🔐 Optional base64 parameter obfuscation
+- 🎯 Type-safe parameter handling
+- 🔍 Automatic parameter name hashing
+- 💾 State persistence across page reloads
+- ↩️ Individual and global state reset capabilities
+- 🌐 Browser and SSR compatible
 
 ## Installation
 
 ```bash
-npm install vue-url-sync
-bun install vue-url-sync
-yarn add vue-url-sync
+npm install use-query-ref
 ```
 
 ## Usage
 
-```typescript
-import { useQueryRef, resetAll } from 'vue-url-sync'
-
-// Basic usage
-const { count } = useQueryRef('count', 0)
-
-// With reset functionality
-const { value, reset } = useQueryRef('value', 'initial')
-
-// Complex objects
-const { settings } = useQueryRef('settings', { theme: 'dark' })
-
-// Reset all query parameters
-resetAll()
+```vue
+import { useQueryRef, resetAll } from 'use-query-ref' // Basic counter example
+const { count } = useQueryRef('count', 0) // With obfuscation disabled const {
+value, reset } = useQueryRef('value', 'initial', { obfuscate: false }) //
+Complex objects const { state } = useQueryRef('state', { foo: 'bar' }) // Reset
+individual state reset() // Reset all query parameters resetAll()
 ```
 
-## Features
+## API
 
-- 🔄 Bidirectional sync between state and URL
-- 🔐 Automatic parameter obfuscation
-- 📦 SSR compatible
-- 🎯 Type-safe
-- 🧹 Automatic cleanup
-- 🔍 URL parameter compression
+### useQueryRef(key, defaultValue, options?)
 
-## Parameter Obfuscation
+- `key`: Parameter name in the URL
+- `defaultValue`: Initial value if parameter is not present
+- `options`: Configuration object
+  - `obfuscate`: Boolean to enable/disable parameter obfuscation (default: true)
 
-By default, URL parameters are automatically obfuscated to keep your URLs clean and compact. For example:
+### resetAll()
 
-```typescript
-const { settings } = useQueryRef('settings', { theme: 'dark', fontSize: 14 })
-```
+Resets all query parameters to their default values.
 
-Instead of having a URL like:
+## Type Safety
 
-```
-https://your-site.com?settings={"theme":"dark","fontSize":14}
-```
-
-The parameters are compressed and encoded to:
-
-```
-https://your-site.com?q=eyJ0IjoiZCIsImYiOjE0fQ
-```
-
-This helps:
-
-- Keep URLs shorter and cleaner
-- Reduce URL parameter size
-- Maintain privacy by not exposing clear parameter names
-- Prevent URL parameter tampering
-
-The obfuscation is automatically reversed when reading parameters, so you always work with the original values in your code.
-
-## SSR Compatibility
-
-The composable is designed to work seamlessly in both client and server environments:
-
-```typescript
-import { useQueryRef } from 'vue-url-sync'
-
-// Works on both server and client
-const { count } = useQueryRef('count', 0)
-```
-
-### How it works:
-
-- **Server Side**: During SSR, the composable reads URL parameters from the request URL, ensuring the initial state matches the URL without hydration mismatches
-- **Client Side**: After hydration, it switches to using the browser's history API for real-time URL updates
-- **No-JS Fallback**: Even without JavaScript, URLs remain functional as regular query parameters
-- **Hydration Safe**: Prevents hydration warnings by ensuring server and client states match
-
-This makes it ideal for:
-
-- Server-rendered Vue applications (Nuxt, Vite SSR)
-- Static Site Generation (SSG)
-- Progressive enhancement scenarios
+The library includes full TypeScript support and will infer the correct types from your default values.
 
 ## License
 
