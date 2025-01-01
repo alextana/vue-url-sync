@@ -1,0 +1,36 @@
+{
+  "name": "vue-url-sync",
+  "version": "0.1.0",
+  "description": "Vue composable for syncing reactive state with URL query parameters",
+  "main": "dist/index.js",
+  "module": "dist/index.mjs",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsup",
+    "prepublishOnly": "npm run build"
+  },
+  "keywords": [
+    "vue",
+    "composable",
+    "query-params",
+    "url-sync",
+    "state-management"
+  ],
+  "author": "Alex Tana",
+  "license": "MIT",
+  "peerDependencies": {
+    "vue": "^3.0.0"
+  },
+  "devDependencies": {
+    "typescript": "^4.9.0",
+    "tsup": "^7.2.0",
+    "vue": "^3.3.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "your-repo-url"
+  }
+}
