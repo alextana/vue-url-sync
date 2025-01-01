@@ -168,5 +168,8 @@ dist
 .yarn/install-state.gz
 .pnp.\*
 
+# Custom ignores
+examples/vue
+
 # IntelliJ based IDEs
 .idea
