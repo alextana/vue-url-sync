@@ -1,6 +1,6 @@
 {
   "name": "vue-url-sync",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Vue composable for syncing reactive state with URL query parameters",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
