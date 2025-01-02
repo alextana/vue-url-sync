@@ -1,6 +1,6 @@
 # use-query-ref
 
-A lightweight utility for syncing state with URL query parameters in Vue applications.
+Sync your Vue state with URL query parameters automatically. When your state changes, the URL updates. When the URL changes, your state updates.
 
 ## Features
 
@@ -20,12 +20,76 @@ npm install use-query-ref
 
 ## Usage
 
+### Basic Counter Example
+
 ```vue
-import { useQueryRef, resetAll } from 'use-query-ref' // Basic counter example
-const { count } = useQueryRef('count', 0) // With obfuscation disabled const {
-value, reset } = useQueryRef('value', 'initial', { obfuscate: false }) //
-Complex objects const { state } = useQueryRef('state', { foo: 'bar' }) // Reset
-individual state reset() // Reset all query parameters resetAll()
+<script setup>
+import { useQueryRef } from 'use-query-ref'
+
+// Initialize with default value 0
+const { count } = useQueryRef('count', 0)
+</script>
+
+<template>
+  <button @click="count++">Increment</button>
+  <div>Count: {{ count }}</div>
+</template>
+```
+
+When you click the button:
+
+- State updates: `count = 1`
+- URL automatically updates: `?count=1`
+- Refresh the page, count stays at 1!
+
+### Complex Objects
+
+```vue
+<script setup>
+import { useQueryRef } from 'use-query-ref'
+
+const { filters } = useQueryRef('filters', {
+  category: 'books',
+  minPrice: 10,
+  inStock: true,
+})
+</script>
+
+<template>
+  <div>
+    <select v-model="filters.category">
+      <option value="books">Books</option>
+      <option value="electronics">Electronics</option>
+    </select>
+    <input type="number" v-model="filters.minPrice" />
+    <input type="checkbox" v-model="filters.inStock" />
+  </div>
+</template>
+```
+
+As you change filters:
+
+- URL updates: `?filters=eyJjYXRlZ29yeSI6ImVsZWN0cm9uaWNzIiwibWluUHJpY2UiOjIwLCJpblN0b2NrIjp0cnVlfQ`
+- Share this URL, and users get the exact same filters!
+
+### Disable Obfuscation
+
+```vue
+const { value } = useQueryRef('search', '', { obfuscate: false })
+```
+
+Now the URL stays human-readable:
+
+- Type "hello": URL becomes `?search=hello`
+- Type "world": URL becomes `?search=world`
+
+### Reset Functionality
+
+```vue
+const { filters, reset } = useQueryRef('filters', { sort: 'asc', page: 1 }) //
+Reset individual state reset() // URL returns to default:
+?filters=eyJzb3J0IjoiYXNjIiwicGFnZSI6MX0 // Reset all query parameters import {
+resetAll } from 'use-query-ref' resetAll() // Clears all parameters from URL
 ```
 
 ## API
